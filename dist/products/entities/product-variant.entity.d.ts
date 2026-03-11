@@ -4,6 +4,6 @@ export declare class ProductVariant {
     size: string;
     color: string;
     stock: number;
-    additional_price: number;
+    additional_price: number | null;
     product: Product;
 }

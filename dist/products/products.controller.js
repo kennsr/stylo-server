@@ -16,6 +16,7 @@ exports.ProductsController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const products_service_1 = require("./products.service");
+const public_decorator_1 = require("../common/decorators/public.decorator");
 let ProductsController = class ProductsController {
     productsService;
     constructor(productsService) {
@@ -45,6 +46,7 @@ let ProductsController = class ProductsController {
 };
 exports.ProductsController = ProductsController;
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)('categories'),
     (0, swagger_1.ApiOperation)({ summary: 'Get all product categories' }),
     __metadata("design:type", Function),
@@ -52,6 +54,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "getCategories", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)('search'),
     (0, swagger_1.ApiOperation)({ summary: 'Search products by keyword' }),
     (0, swagger_1.ApiQuery)({ name: 'q', required: true }),
@@ -61,6 +64,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "search", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: 'List products with optional filters' }),
     (0, swagger_1.ApiQuery)({ name: 'page', required: false }),
@@ -78,6 +82,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)(':id/reviews'),
     (0, swagger_1.ApiOperation)({ summary: 'Get reviews for a product' }),
     __param(0, (0, common_1.Param)('id')),
@@ -86,6 +91,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "getReviews", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Get a single product by ID' }),
     __param(0, (0, common_1.Param)('id')),

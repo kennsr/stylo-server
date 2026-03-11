@@ -8,9 +8,9 @@ export class Category {
   @Column({ unique: true })
   name: string;
 
-  @Column({ nullable: true })
-  icon_url: string;
+  @Column({ type: 'varchar', nullable: true })
+  icon_url: string | null;
 
-  @Column({ nullable: true })
-  slug: string;
+  @Column({ type: 'varchar', nullable: true })
+  slug: string | null;
 }

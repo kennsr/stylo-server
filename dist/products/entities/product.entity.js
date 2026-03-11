@@ -50,7 +50,7 @@ __decorate([
 ], Product.prototype, "price", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true, type: 'float' }),
-    __metadata("design:type", Number)
+    __metadata("design:type", Object)
 ], Product.prototype, "discount_price", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

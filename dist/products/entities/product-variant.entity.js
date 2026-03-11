@@ -38,8 +38,8 @@ __decorate([
     __metadata("design:type", Number)
 ], ProductVariant.prototype, "stock", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true, type: 'float' }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ type: 'float', nullable: true }),
+    __metadata("design:type", Object)
 ], ProductVariant.prototype, "additional_price", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => product_entity_1.Product, (product) => product.variants, {

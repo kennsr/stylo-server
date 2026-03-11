@@ -11,6 +11,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
+import { Public } from '../common/decorators/public.decorator';
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -18,12 +19,14 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @Public()
   @Get('categories')
   @ApiOperation({ summary: 'Get all product categories' })
   getCategories() {
     return this.productsService.findAllCategories();
   }
 
+  @Public()
   @Get('search')
   @ApiOperation({ summary: 'Search products by keyword' })
   @ApiQuery({ name: 'q', required: true })
@@ -31,6 +34,7 @@ export class ProductsController {
     return this.productsService.search(q);
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'List products with optional filters' })
   @ApiQuery({ name: 'page', required: false })
@@ -54,12 +58,14 @@ export class ProductsController {
     });
   }
 
+  @Public()
   @Get(':id/reviews')
   @ApiOperation({ summary: 'Get reviews for a product' })
   getReviews(@Param('id') id: string) {
     return this.productsService.findReviews(id);
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get a single product by ID' })
   findOne(@Param('id') id: string) {

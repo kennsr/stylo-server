@@ -60,7 +60,7 @@ async function seed() {
   const savedCategories: Category[] = [];
   for (const cat of categories) {
     let c = await catRepo.findOne({ where: { name: cat.name } });
-    if (!c) { c = await catRepo.save(catRepo.create(cat)); }
+    if (!c) { c = (await catRepo.save(catRepo.create(cat))) as Category; }
     savedCategories.push(c);
   }
   console.log('✅ Categories seeded');
@@ -177,7 +177,7 @@ async function seed() {
     for (const p of sampleProducts) {
       const { variants, ...productData } = p;
       const product = productRepo.create(productData);
-      const savedProduct = await productRepo.save(product);
+      const savedProduct = (await productRepo.save(product)) as Product;
       for (const v of variants) {
         const variant = variantRepo.create({ ...v, product: savedProduct });
         await variantRepo.save(variant);

@@ -5,7 +5,7 @@ export declare class Product {
     name: string;
     description: string;
     price: number;
-    discount_price: number;
+    discount_price: number | null;
     category: string;
     images: string[];
     variants: ProductVariant[];

@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { HomeService } from './home.service';
+import { Public } from '../common/decorators/public.decorator';
 
 @ApiTags('home')
 @ApiBearerAuth()
@@ -8,6 +9,7 @@ import { HomeService } from './home.service';
 export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
+  @Public()
   @Get('banners')
   @ApiOperation({ summary: 'Get promotional banners for home screen' })
   getBanners() {

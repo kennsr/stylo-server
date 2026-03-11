@@ -24,7 +24,7 @@ export class Product {
   price: number;
 
   @Column({ nullable: true, type: 'float' })
-  discount_price: number;
+  discount_price: number | null;
 
   @Column()
   category: string;

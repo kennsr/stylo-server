@@ -21,8 +21,8 @@ export class ProductVariant {
   @Column({ default: 0 })
   stock: number;
 
-  @Column({ nullable: true, type: 'float' })
-  additional_price: number;
+  @Column({ type: 'float', nullable: true })
+  additional_price: number | null;
 
   @ManyToOne(() => Product, (product) => product.variants, {
     onDelete: 'CASCADE',
