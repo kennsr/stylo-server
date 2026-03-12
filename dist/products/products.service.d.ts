@@ -14,6 +14,10 @@ export declare class ProductsService {
         search?: string;
         featured?: boolean;
     }): Promise<Product[]>;
+    count(query: {
+        category?: string;
+        search?: string;
+    }): Promise<number>;
     findOne(id: string): Promise<Product>;
     search(q: string): Promise<Product[]>;
     findAllCategories(): Promise<Category[]>;

@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -32,6 +27,27 @@ export class ProductsController {
   @ApiQuery({ name: 'q', required: true })
   search(@Query('q') q: string) {
     return this.productsService.search(q);
+  }
+
+  @Public()
+  @Get('count')
+  @ApiOperation({
+    summary:
+      'Fetches the total number of products based on the applied filters',
+  })
+  @ApiQuery({ name: 'category', required: false })
+  @ApiQuery({ name: 'search', required: false })
+  async getCount(
+    @Query('category') category?: string,
+    @Query('search') search?: string,
+  ) {
+    const total = await this.productsService.count({ category, search });
+    return {
+      message: 'Success',
+      data: {
+        total,
+      },
+    };
   }
 
   @Public()

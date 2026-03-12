@@ -28,6 +28,15 @@ let ProductsController = class ProductsController {
     search(q) {
         return this.productsService.search(q);
     }
+    async getCount(category, search) {
+        const total = await this.productsService.count({ category, search });
+        return {
+            message: 'Success',
+            data: {
+                total,
+            },
+        };
+    }
     findAll(page, pageSize, category, search, featured) {
         return this.productsService.findAll({
             page: page ? Number(page) : 1,
@@ -63,6 +72,20 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "search", null);
+__decorate([
+    (0, public_decorator_1.Public)(),
+    (0, common_1.Get)('count'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Fetches the total number of products based on the applied filters',
+    }),
+    (0, swagger_1.ApiQuery)({ name: 'category', required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'search', required: false }),
+    __param(0, (0, common_1.Query)('category')),
+    __param(1, (0, common_1.Query)('search')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "getCount", null);
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),

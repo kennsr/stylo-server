@@ -31,7 +31,8 @@ let ProductsService = class ProductsService {
     async findAll(query) {
         const page = query.page ?? 1;
         const pageSize = query.pageSize ?? 20;
-        const qb = this.productsRepository.createQueryBuilder('product')
+        const qb = this.productsRepository
+            .createQueryBuilder('product')
             .leftJoinAndSelect('product.variants', 'variants');
         if (query.category) {
             qb.andWhere('product.category = :category', { category: query.category });
@@ -40,10 +41,23 @@ let ProductsService = class ProductsService {
             qb.andWhere('(product.name ILIKE :search OR product.description ILIKE :search)', { search: `%${query.search}%` });
         }
         if (query.featured !== undefined) {
-            qb.andWhere('product.is_featured = :featured', { featured: query.featured });
+            qb.andWhere('product.is_featured = :featured', {
+                featured: query.featured,
+            });
         }
         qb.skip((page - 1) * pageSize).take(pageSize);
         return qb.getMany();
+    }
+    async count(query) {
+        const qb = this.productsRepository.createQueryBuilder('product');
+        if (query.category) {
+            qb.andWhere('product.category = :category', { category: query.category });
+        }
+        if (query.search) {
+            qb.andWhere('(product.name ILIKE :search OR product.description ILIKE :search)', { search: `%${query.search}%` });
+        }
+        const total = await qb.getCount();
+        return total;
     }
     async findOne(id) {
         const product = await this.productsRepository.findOne({
@@ -69,7 +83,9 @@ let ProductsService = class ProductsService {
         });
         if (!product)
             throw new common_1.NotFoundException('Product not found');
-        return this.reviewsRepository.find({ where: { product: { id: productId } } });
+        return this.reviewsRepository.find({
+            where: { product: { id: productId } },
+        });
     }
 };
 exports.ProductsService = ProductsService;

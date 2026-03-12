@@ -25,7 +25,8 @@ export class ProductsService {
   }) {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 20;
-    const qb = this.productsRepository.createQueryBuilder('product')
+    const qb = this.productsRepository
+      .createQueryBuilder('product')
       .leftJoinAndSelect('product.variants', 'variants');
 
     if (query.category) {
@@ -38,11 +39,30 @@ export class ProductsService {
       );
     }
     if (query.featured !== undefined) {
-      qb.andWhere('product.is_featured = :featured', { featured: query.featured });
+      qb.andWhere('product.is_featured = :featured', {
+        featured: query.featured,
+      });
     }
 
     qb.skip((page - 1) * pageSize).take(pageSize);
     return qb.getMany();
+  }
+
+  async count(query: { category?: string; search?: string }) {
+    const qb = this.productsRepository.createQueryBuilder('product');
+
+    if (query.category) {
+      qb.andWhere('product.category = :category', { category: query.category });
+    }
+    if (query.search) {
+      qb.andWhere(
+        '(product.name ILIKE :search OR product.description ILIKE :search)',
+        { search: `%${query.search}%` },
+      );
+    }
+
+    const total = await qb.getCount();
+    return total;
   }
 
   async findOne(id: string): Promise<Product> {
@@ -70,6 +90,8 @@ export class ProductsService {
       where: { id: productId },
     });
     if (!product) throw new NotFoundException('Product not found');
-    return this.reviewsRepository.find({ where: { product: { id: productId } } });
+    return this.reviewsRepository.find({
+      where: { product: { id: productId } },
+    });
   }
 }
