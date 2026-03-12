@@ -1,0 +1,53 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Build output
+dist
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Test coverage
+coverage
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Misc
+.nest
+.eslintcache
+.prettierrc
+eslint.config.mjs
+test-endpoints.sh
+*.postman_collection.json
+*.postman_environment.json
+login-out.txt
+
+# Git
+.git
+.gitignore
