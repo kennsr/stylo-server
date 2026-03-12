@@ -35,6 +35,18 @@ export class CheckoutService {
     return this.shippingOptionsRepository.find();
   }
 
+  getPaymentMethods() {
+    // Return a static list of payment methods
+    return [
+      { id: 'cc', name: 'Credit Card', provider: 'Stripe' },
+      { id: 'gopay', name: 'GoPay', provider: 'Midtrans' },
+      { id: 'ovo', name: 'OVO', provider: 'Midtrans' },
+      { id: 'qris', name: 'QRIS', provider: 'Midtrans' },
+      { id: 'bca_va', name: 'BCA Virtual Account', provider: 'Midtrans' },
+      { id: 'cod', name: 'Cash on Delivery', provider: 'Internal' },
+    ];
+  }
+
   async placeOrder(user: User, dto: PlaceOrderDto): Promise<Order> {
     const address = await this.addressesRepository.findOne({
       where: { id: dto.address_id, user: { id: user.id } },

@@ -6,5 +6,10 @@ export declare class CheckoutController {
     constructor(checkoutService: CheckoutService);
     getAddresses(user: User): Promise<import("./entities/shipping-address.entity").ShippingAddress[]>;
     getShippingRates(addressId: string, weight: string): Promise<import("./entities/shipping-option.entity").ShippingOption[]>;
+    getPaymentMethods(): {
+        id: string;
+        name: string;
+        provider: string;
+    }[];
     placeOrder(user: User, dto: PlaceOrderDto): Promise<import("../orders/entities/order.entity").Order>;
 }

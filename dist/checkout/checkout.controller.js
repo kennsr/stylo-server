@@ -30,6 +30,9 @@ let CheckoutController = class CheckoutController {
     getShippingRates(addressId, weight) {
         return this.checkoutService.getShippingRates(addressId, parseFloat(weight));
     }
+    getPaymentMethods() {
+        return this.checkoutService.getPaymentMethods();
+    }
     placeOrder(user, dto) {
         return this.checkoutService.placeOrder(user, dto);
     }
@@ -54,6 +57,13 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], CheckoutController.prototype, "getShippingRates", null);
+__decorate([
+    (0, common_1.Get)('payment-methods'),
+    (0, swagger_1.ApiOperation)({ summary: 'List available payment methods' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], CheckoutController.prototype, "getPaymentMethods", null);
 __decorate([
     (0, common_1.Post)('place-order'),
     (0, swagger_1.ApiOperation)({ summary: 'Place order from cart' }),

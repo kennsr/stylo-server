@@ -28,6 +28,12 @@ export class CheckoutController {
     return this.checkoutService.getShippingRates(addressId, parseFloat(weight));
   }
 
+  @Get('payment-methods')
+  @ApiOperation({ summary: 'List available payment methods' })
+  getPaymentMethods() {
+    return this.checkoutService.getPaymentMethods();
+  }
+
   @Post('place-order')
   @ApiOperation({ summary: 'Place order from cart' })
   placeOrder(@CurrentUser() user: User, @Body() dto: PlaceOrderDto) {

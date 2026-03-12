@@ -23,8 +23,10 @@ let TryOnService = class TryOnService {
         this.tryOnResultsRepository = tryOnResultsRepository;
     }
     async generate(user, dto) {
-        const originalImageUrl = `data:image/jpeg;base64,${dto.photo.substring(0, 50)}...`;
-        const resultImageUrl = `https://placehold.co/512x512?text=Try-On+Result`;
+        const originalImageUrl = dto.photo.startsWith('data:image')
+            ? dto.photo
+            : `data:image/jpeg;base64,${dto.photo}`;
+        const resultImageUrl = originalImageUrl;
         const result = this.tryOnResultsRepository.create({
             user,
             product_id: dto.productId,
@@ -39,6 +41,17 @@ let TryOnService = class TryOnService {
             where: { user: { id: user.id } },
             order: { created_at: 'DESC' },
         });
+    }
+    async getAvatars(user) {
+        const results = await this.tryOnResultsRepository.find({
+            where: { user: { id: user.id } },
+            select: ['original_image_url'],
+        });
+        const uniqueUrls = [...new Set(results.map(r => r.original_image_url))];
+        return uniqueUrls.map((url, index) => ({
+            id: `avatar_${index}`,
+            url: url,
+        }));
     }
 };
 exports.TryOnService = TryOnService;

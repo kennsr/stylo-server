@@ -22,4 +22,10 @@ export class TryOnController {
   getResults(@CurrentUser() user: User) {
     return this.tryOnService.getResults(user);
   }
+
+  @Get('avatars')
+  @ApiOperation({ summary: 'Get saved avatars for try-on for current user' })
+  getAvatars(@CurrentUser() user: User) {
+    return this.tryOnService.getAvatars(user);
+  }
 }

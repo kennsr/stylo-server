@@ -7,4 +7,8 @@ export declare class TryOnService {
     constructor(tryOnResultsRepository: Repository<TryOnResult>);
     generate(user: User, dto: GenerateTryOnDto): Promise<TryOnResult>;
     getResults(user: User): Promise<TryOnResult[]>;
+    getAvatars(user: User): Promise<{
+        id: string;
+        url: string;
+    }[]>;
 }

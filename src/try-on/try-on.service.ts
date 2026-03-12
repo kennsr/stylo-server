@@ -14,9 +14,15 @@ export class TryOnService {
 
   async generate(user: User, dto: GenerateTryOnDto): Promise<TryOnResult> {
     // TODO: Integrate with real AI try-on API (e.g., IDM-VTON or commercial API)
-    // For now, store original image as base64 data URI and return a placeholder result
-    const originalImageUrl = `data:image/jpeg;base64,${dto.photo.substring(0, 50)}...`; // truncated for storage
-    const resultImageUrl = `https://placehold.co/512x512?text=Try-On+Result`;
+    // For now, return a modified version of the input base64 image to prove the API works.
+    
+    // We'll simulate a "modification" by just returning the same base64 for now, 
+    // or you could append a watermark. To keep it simple and valid base64, we just return the input.
+    const originalImageUrl = dto.photo.startsWith('data:image') 
+      ? dto.photo 
+      : `data:image/jpeg;base64,${dto.photo}`;
+      
+    const resultImageUrl = originalImageUrl; // Returning the same image as a stub
 
     const result = this.tryOnResultsRepository.create({
       user,
@@ -34,5 +40,22 @@ export class TryOnService {
       where: { user: { id: user.id } },
       order: { created_at: 'DESC' },
     });
+  }
+
+  async getAvatars(user: User) {
+    // Mocking returning a list of saved avatars for the user.
+    // Ideally this would be queried from a dedicated `UserAvatar` entity.
+    // For now, we extract unique original images from tryOnResults or return defaults.
+    const results = await this.tryOnResultsRepository.find({
+      where: { user: { id: user.id } },
+      select: ['original_image_url'],
+    });
+
+    const uniqueUrls = [...new Set(results.map(r => r.original_image_url))];
+    
+    return uniqueUrls.map((url, index) => ({
+      id: `avatar_${index}`,
+      url: url,
+    }));
   }
 }

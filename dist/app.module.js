@@ -23,6 +23,7 @@ const notifications_module_1 = require("./notifications/notifications.module");
 const response_wrapper_interceptor_1 = require("./common/interceptors/response-wrapper.interceptor");
 const http_exception_filter_1 = require("./common/filters/http-exception.filter");
 const jwt_auth_guard_1 = require("./common/guards/jwt-auth.guard");
+const wishlist_module_1 = require("./wishlist/wishlist.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -51,6 +52,7 @@ exports.AppModule = AppModule = __decorate([
             home_module_1.HomeModule,
             try_on_module_1.TryOnModule,
             notifications_module_1.NotificationsModule,
+            wishlist_module_1.WishlistModule,
         ],
         providers: [
             { provide: core_1.APP_GUARD, useClass: jwt_auth_guard_1.JwtAuthGuard },

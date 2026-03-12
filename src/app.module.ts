@@ -14,6 +14,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { ResponseWrapperInterceptor } from './common/interceptors/response-wrapper.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
     HomeModule,
     TryOnModule,
     NotificationsModule,
+    WishlistModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

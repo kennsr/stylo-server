@@ -31,7 +31,7 @@ async function bootstrap() {
   // Set global prefix
   app.setGlobalPrefix('v1');
 
-  const port = process.env.PORT ?? 3000;
+  const port = process.env.PORT ?? 8080;
   await app.listen(port);
   console.log(`🚀 Stylo API running on http://localhost:${port}/v1`);
   console.log(`📚 Swagger docs at http://localhost:${port}/api`);

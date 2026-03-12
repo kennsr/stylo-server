@@ -30,6 +30,9 @@ let TryOnController = class TryOnController {
     getResults(user) {
         return this.tryOnService.getResults(user);
     }
+    getAvatars(user) {
+        return this.tryOnService.getAvatars(user);
+    }
 };
 exports.TryOnController = TryOnController;
 __decorate([
@@ -49,6 +52,14 @@ __decorate([
     __metadata("design:paramtypes", [user_entity_1.User]),
     __metadata("design:returntype", void 0)
 ], TryOnController.prototype, "getResults", null);
+__decorate([
+    (0, common_1.Get)('avatars'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get saved avatars for try-on for current user' }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entity_1.User]),
+    __metadata("design:returntype", void 0)
+], TryOnController.prototype, "getAvatars", null);
 exports.TryOnController = TryOnController = __decorate([
     (0, swagger_1.ApiTags)('try-on'),
     (0, swagger_1.ApiBearerAuth)(),

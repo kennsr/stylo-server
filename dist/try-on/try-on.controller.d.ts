@@ -6,4 +6,8 @@ export declare class TryOnController {
     constructor(tryOnService: TryOnService);
     generate(user: User, dto: GenerateTryOnDto): Promise<import("./entities/try-on-result.entity").TryOnResult>;
     getResults(user: User): Promise<import("./entities/try-on-result.entity").TryOnResult[]>;
+    getAvatars(user: User): Promise<{
+        id: string;
+        url: string;
+    }[]>;
 }

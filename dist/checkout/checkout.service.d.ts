@@ -15,5 +15,10 @@ export declare class CheckoutService {
     constructor(addressesRepository: Repository<ShippingAddress>, shippingOptionsRepository: Repository<ShippingOption>, ordersRepository: Repository<Order>, orderItemsRepository: Repository<OrderItem>, cartService: CartService);
     getAddresses(user: User): Promise<ShippingAddress[]>;
     getShippingRates(_addressId: string, _weight: number): Promise<ShippingOption[]>;
+    getPaymentMethods(): {
+        id: string;
+        name: string;
+        provider: string;
+    }[];
     placeOrder(user: User, dto: PlaceOrderDto): Promise<Order>;
 }

@@ -42,6 +42,16 @@ let CheckoutService = class CheckoutService {
     async getShippingRates(_addressId, _weight) {
         return this.shippingOptionsRepository.find();
     }
+    getPaymentMethods() {
+        return [
+            { id: 'cc', name: 'Credit Card', provider: 'Stripe' },
+            { id: 'gopay', name: 'GoPay', provider: 'Midtrans' },
+            { id: 'ovo', name: 'OVO', provider: 'Midtrans' },
+            { id: 'qris', name: 'QRIS', provider: 'Midtrans' },
+            { id: 'bca_va', name: 'BCA Virtual Account', provider: 'Midtrans' },
+            { id: 'cod', name: 'Cash on Delivery', provider: 'Internal' },
+        ];
+    }
     async placeOrder(user, dto) {
         const address = await this.addressesRepository.findOne({
             where: { id: dto.address_id, user: { id: user.id } },
