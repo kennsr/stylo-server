@@ -2,9 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Global validation pipe
   app.useGlobalPipes(
@@ -17,6 +19,11 @@ async function bootstrap() {
 
   // CORS
   app.enableCors();
+
+  // Serve static files for uploads
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads/',
+  });
 
   // Swagger/OpenAPI
   const config = new DocumentBuilder()
@@ -35,5 +42,6 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`🚀 Stylo API running on http://localhost:${port}/v1`);
   console.log(`📚 Swagger docs at http://localhost:${port}/api`);
+  console.log(`📁 Avatar uploads served at http://localhost:${port}/uploads/avatars/`);
 }
 bootstrap();

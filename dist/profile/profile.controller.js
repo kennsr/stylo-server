@@ -14,11 +14,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const swagger_1 = require("@nestjs/swagger");
 const profile_service_1 = require("./profile.service");
 const current_user_decorator_1 = require("../common/decorators/current-user.decorator");
 const user_entity_1 = require("../auth/entities/user.entity");
 const profile_dto_1 = require("./dto/profile.dto");
+const passport_1 = require("@nestjs/passport");
 let ProfileController = class ProfileController {
     profileService;
     constructor(profileService) {
@@ -41,6 +43,9 @@ let ProfileController = class ProfileController {
     }
     updateFitProfile(user, dto) {
         return this.profileService.updateFitProfile(user, dto);
+    }
+    uploadAvatar(user, file) {
+        return this.profileService.uploadAvatar(user, file);
     }
 };
 exports.ProfileController = ProfileController;
@@ -97,6 +102,40 @@ __decorate([
     __metadata("design:paramtypes", [user_entity_1.User, profile_dto_1.UpdateFitProfileDto]),
     __metadata("design:returntype", void 0)
 ], ProfileController.prototype, "updateFitProfile", null);
+__decorate([
+    (0, common_1.Post)('avatar'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar', {
+        limits: {
+            fileSize: 5 * 1024 * 1024,
+        },
+        fileFilter: (req, file, cb) => {
+            if (!file.mimetype.match(/\/(jpg|jpeg|png|webp)$/)) {
+                return cb(new Error('Only image files are allowed!'), false);
+            }
+            cb(null, true);
+        },
+    })),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                avatar: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Avatar image file (max 5MB, jpg/png/webp)',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiOperation)({ summary: 'Upload user avatar' }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entity_1.User, Object]),
+    __metadata("design:returntype", void 0)
+], ProfileController.prototype, "uploadAvatar", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, swagger_1.ApiTags)('profile'),
     (0, swagger_1.ApiBearerAuth)(),

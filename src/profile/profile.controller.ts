@@ -2,14 +2,21 @@ import {
   Controller,
   Get,
   Put,
+  Post,
   Body,
+  UseInterceptors,
+  UploadedFile,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiTags,
   ApiBearerAuth,
   ApiOperation,
+  ApiConsumes,
+  ApiBody,
 } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -19,6 +26,8 @@ import {
   UpdateStylePreferencesDto,
   UpdateFitProfileDto,
 } from './dto/profile.dto';
+import { UploadAvatarDto } from './dto/upload-avatar.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('profile')
 @ApiBearerAuth()
@@ -64,5 +73,42 @@ export class ProfileController {
   @ApiOperation({ summary: 'Save or update AI fit profile' })
   updateFitProfile(@CurrentUser() user: User, @Body() dto: UpdateFitProfileDto) {
     return this.profileService.updateFitProfile(user, dto);
+  }
+
+  @Post('avatar')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB max
+      },
+      fileFilter: (req, file, cb) => {
+        // Accept only images
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|webp)$/)) {
+          return cb(new Error('Only image files are allowed!'), false);
+        }
+        cb(null, true);
+      },
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        avatar: {
+          type: 'string',
+          format: 'binary',
+          description: 'Avatar image file (max 5MB, jpg/png/webp)',
+        },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Upload user avatar' })
+  uploadAvatar(
+    @CurrentUser() user: User,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.profileService.uploadAvatar(user, file);
   }
 }

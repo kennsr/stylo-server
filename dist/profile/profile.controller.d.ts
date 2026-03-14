@@ -52,4 +52,12 @@ export declare class ProfileController {
         hips: number;
         preferred_size: string;
     }>;
+    uploadAvatar(user: User, file: Express.Multer.File): Promise<{
+        id: string;
+        email: string;
+        name: string;
+        phone: string;
+        avatar_url: string;
+        style_preferences: string[];
+    }>;
 }

@@ -8,6 +8,16 @@ export declare class ProfileService {
     private stylePreferencesRepository;
     private fitProfilesRepository;
     constructor(usersRepository: Repository<User>, stylePreferencesRepository: Repository<StylePreference>, fitProfilesRepository: Repository<FitProfile>);
+    private getUploadsDir;
+    private generateFileName;
+    uploadAvatar(user: User, file: Express.Multer.File): Promise<{
+        id: string;
+        email: string;
+        name: string;
+        phone: string;
+        avatar_url: string;
+        style_preferences: string[];
+    }>;
     getProfile(user: User): {
         id: string;
         email: string;

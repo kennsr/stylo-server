@@ -45,56 +45,78 @@ const dataSource = new DataSource({
   synchronize: true,
 });
 
-// Real product images from Unsplash and other free sources
+// Product images from Picsum (reliable for development)
 const PRODUCT_IMAGES = {
   tops: [
-    'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80',
-    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80',
-    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80',
-    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80',
-    'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&q=80',
+    'https://picsum.photos/seed/toptee1/400/500',
+    'https://picsum.photos/seed/toptee2/400/500',
+    'https://picsum.photos/seed/hoodie1/400/500',
+    'https://picsum.photos/seed/hoodie2/400/500',
+    'https://picsum.photos/seed/shirt1/400/500',
   ],
   bottoms: [
-    'https://images.unsplash.com/photo-1541099649105-f69ad21f3244?w=800&q=80',
-    'https://images.unsplash.com/photo-1584370848010-d7cc637703e6?w=800&q=80',
-    'https://images.unsplash.com/photo-1517445312882-5632f8b1f0bb?w=800&q=80',
-    'https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=800&q=80',
+    'https://picsum.photos/seed/jeans1/400/500',
+    'https://picsum.photos/seed/jeans2/400/500',
+    'https://picsum.photos/seed/cargo1/400/500',
+    'https://picsum.photos/seed/cargo2/400/500',
   ],
   dresses: [
-    'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80',
-    'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&q=80',
-    'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&q=80',
-    'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=800&q=80',
-    'https://images.unsplash.com/photo-1596781437502-5f4349604329?w=800&q=80',
+    'https://picsum.photos/seed/dress1/400/500',
+    'https://picsum.photos/seed/dress2/400/500',
+    'https://picsum.photos/seed/dress3/400/500',
+    'https://picsum.photos/seed/dress4/400/500',
+    'https://picsum.photos/seed/dress5/400/500',
   ],
   outerwear: [
-    'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80',
-    'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=800&q=80',
-    'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&q=80',
-    'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80',
+    'https://picsum.photos/seed/jacket1/400/500',
+    'https://picsum.photos/seed/jacket2/400/500',
+    'https://picsum.photos/seed/denim1/400/500',
+    'https://picsum.photos/seed/denim2/400/500',
   ],
   footwear: [
-    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80',
-    'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&q=80',
-    'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=800&q=80',
-    'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80',
+    'https://picsum.photos/seed/sneaker1/400/500',
+    'https://picsum.photos/seed/sneaker2/400/500',
+    'https://picsum.photos/seed/sneaker3/400/500',
+    'https://picsum.photos/seed/sneaker4/400/500',
   ],
   accessories: [
-    'https://images.unsplash.com/photo-1576053139778-7e32f2ae3cfd?w=800&q=80',
-    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
-    'https://images.unsplash.com/photo-1509319117193-518da7277327?w=800&q=80',
+    'https://picsum.photos/seed/watch1/400/500',
+    'https://picsum.photos/seed/bag1/400/500',
+    'https://picsum.photos/seed/bag2/400/500',
   ],
 };
 
 const BANNER_IMAGES = [
-  'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1200&q=80',
-  'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=80',
-  'https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=1200&q=80',
+  'https://picsum.photos/seed/banner1/800/300',
+  'https://picsum.photos/seed/banner2/800/300',
+  'https://picsum.photos/seed/banner3/800/300',
 ];
 
 async function seed() {
   await dataSource.initialize();
   console.log('🌱 Seeding database...');
+
+  // Clear existing data (in correct order due to foreign key constraints)
+  console.log('🗑️  Clearing existing data...');
+  await dataSource.query('TRUNCATE TABLE reviews CASCADE');
+  await dataSource.query('TRUNCATE TABLE product_variants CASCADE');
+  await dataSource.query('TRUNCATE TABLE products CASCADE');
+  await dataSource.query('TRUNCATE TABLE banners CASCADE');
+  await dataSource.query('TRUNCATE TABLE categories CASCADE');
+  await dataSource.query('TRUNCATE TABLE style_preferences CASCADE');
+  await dataSource.query('TRUNCATE TABLE user_style_preferences CASCADE');
+  await dataSource.query('TRUNCATE TABLE shipping_addresses CASCADE');
+  await dataSource.query('TRUNCATE TABLE shipping_options CASCADE');
+  await dataSource.query('TRUNCATE TABLE notifications CASCADE');
+  await dataSource.query('TRUNCATE TABLE cart_items CASCADE');
+  await dataSource.query('TRUNCATE TABLE carts CASCADE');
+  await dataSource.query('TRUNCATE TABLE order_items CASCADE');
+  await dataSource.query('TRUNCATE TABLE orders CASCADE');
+  await dataSource.query('TRUNCATE TABLE try_on_results CASCADE');
+  await dataSource.query('TRUNCATE TABLE fit_profiles CASCADE');
+  // Delete users except we'll recreate demo user
+  await dataSource.query('DELETE FROM users');
+  console.log('✅ Existing data cleared');
 
   // Style Preferences
   const prefRepo = dataSource.getRepository(StylePreference);
@@ -164,77 +186,69 @@ async function seed() {
 
   // Banners
   const bannerRepo = dataSource.getRepository(Banner);
-  const bannerCount = await bannerRepo.count();
-  if (bannerCount === 0) {
-    await bannerRepo.save([
-      bannerRepo.create({
-        image_url: BANNER_IMAGES[0],
-        title: 'New Arrivals',
-        subtitle: 'Discover the latest fashion trends',
-        deep_link: '/products?featured=true',
-      }),
-      bannerRepo.create({
-        image_url: BANNER_IMAGES[1],
-        title: 'Summer Collection',
-        subtitle: 'Up to 50% off on selected items',
-        deep_link: '/products?category=Dresses',
-      }),
-      bannerRepo.create({
-        image_url: BANNER_IMAGES[2],
-        title: 'AI Virtual Try-On',
-        subtitle: 'See how it looks before you buy',
-        deep_link: '/try-on',
-      }),
-    ]);
-  }
+  await bannerRepo.save([
+    bannerRepo.create({
+      image_url: BANNER_IMAGES[0],
+      title: 'New Arrivals',
+      subtitle: 'Discover the latest fashion trends',
+      deep_link: '/products?featured=true',
+    }),
+    bannerRepo.create({
+      image_url: BANNER_IMAGES[1],
+      title: 'Summer Collection',
+      subtitle: 'Up to 50% off on selected items',
+      deep_link: '/products?category=Dresses',
+    }),
+    bannerRepo.create({
+      image_url: BANNER_IMAGES[2],
+      title: 'AI Virtual Try-On',
+      subtitle: 'See how it looks before you buy',
+      deep_link: '/try-on',
+    }),
+  ]);
   console.log('✅ Banners seeded');
 
   // Shipping Options
   const shippingRepo = dataSource.getRepository(ShippingOption);
-  const shippingCount = await shippingRepo.count();
-  if (shippingCount === 0) {
-    await shippingRepo.save([
-      shippingRepo.create({
-        courier: 'JNE',
-        service: 'Regular',
-        cost: 15000,
-        estimated_days: 3,
-      }),
-      shippingRepo.create({
-        courier: 'JNE',
-        service: 'Express',
-        cost: 25000,
-        estimated_days: 1,
-      }),
-      shippingRepo.create({
-        courier: 'TIKI',
-        service: 'Regular',
-        cost: 12000,
-        estimated_days: 4,
-      }),
-      shippingRepo.create({
-        courier: 'SiCepat',
-        service: 'Regular',
-        cost: 14000,
-        estimated_days: 2,
-      }),
-      shippingRepo.create({
-        courier: 'SiCepat',
-        service: 'Express',
-        cost: 22000,
-        estimated_days: 1,
-      }),
-    ]);
-  }
+  await shippingRepo.save([
+    shippingRepo.create({
+      courier: 'JNE',
+      service: 'Regular',
+      cost: 15000,
+      estimated_days: 3,
+    }),
+    shippingRepo.create({
+      courier: 'JNE',
+      service: 'Express',
+      cost: 25000,
+      estimated_days: 1,
+    }),
+    shippingRepo.create({
+      courier: 'TIKI',
+      service: 'Regular',
+      cost: 12000,
+      estimated_days: 4,
+    }),
+    shippingRepo.create({
+      courier: 'SiCepat',
+      service: 'Regular',
+      cost: 14000,
+      estimated_days: 2,
+    }),
+    shippingRepo.create({
+      courier: 'SiCepat',
+      service: 'Express',
+      cost: 22000,
+      estimated_days: 1,
+    }),
+  ]);
   console.log('✅ Shipping options seeded');
 
   // Dynamic Product Generation (100 products)
   const productRepo = dataSource.getRepository(Product);
   const variantRepo = dataSource.getRepository(ProductVariant);
-  const productCount = await productRepo.count();
 
-  if (productCount < 100) {
-    const productNames = {
+  const productNames = {
       tops: [
         'Oversized Tee',
         'Streetwear Hoodie',
@@ -392,57 +406,42 @@ async function seed() {
       }
     }
     console.log(`✅ 100 products seeded`);
-  } else {
-    console.log(
-      'ℹ️ Products already seeded (Count: ' +
-        productCount +
-        '). Skipping to avoid duplicates.',
-    );
-  }
 
   // Demo user
   const userRepo = dataSource.getRepository(User);
-  let demoUser = await userRepo.findOne({ where: { email: 'demo@stylo.id' } });
-  if (!demoUser) {
-    const password_hash = await bcrypt.hash('password123', 10);
-    demoUser = await userRepo.save(
-      userRepo.create({
-        email: 'demo@stylo.id',
-        name: 'Demo User',
-        password_hash,
-        phone: '081234567890',
-        avatar_url:
-          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face',
-        style_preferences: [prefs[0], prefs[2]],
-      }),
-    );
+  const password_hash = await bcrypt.hash('password123', 10);
+  let demoUser = await userRepo.save(
+    userRepo.create({
+      email: 'demo@stylo.id',
+      name: 'Demo User',
+      password_hash,
+      phone: '081234567890',
+      avatar_url: 'https://picsum.photos/seed/avatar1/200/200',
+      style_preferences: [prefs[0], prefs[2]],
+    }),
+  );
 
-    // Add a sample shipping address for demo user
-    const addrRepo = dataSource.getRepository(ShippingAddress);
-    await addrRepo.save(
-      addrRepo.create({
-        user: demoUser,
-        receiver_name: 'Demo User',
-        phone: '081234567890',
-        street: 'Jl. Sudirman No. 1',
-        city: 'Jakarta',
-        province: 'DKI Jakarta',
-        postal_code: '10220',
-        is_default: true,
-        label: 'Home',
-      }),
-    );
-    console.log(
-      '✅ Demo user seeded (email: demo@stylo.id, password: password123)',
-    );
-  } else {
-    console.log('ℹ️ Demo user already exists');
-  }
+  // Add a sample shipping address for demo user
+  const addrRepo = dataSource.getRepository(ShippingAddress);
+  await addrRepo.save(
+    addrRepo.create({
+      user: demoUser,
+      receiver_name: 'Demo User',
+      phone: '081234567890',
+      street: 'Jl. Sudirman No. 1',
+      city: 'Jakarta',
+      province: 'DKI Jakarta',
+      postal_code: '10220',
+      is_default: true,
+      label: 'Home',
+    }),
+  );
+  console.log(
+    '✅ Demo user seeded (email: demo@stylo.id, password: password123)',
+  );
 
   // Create additional test users
-  const userCount = await userRepo.count();
-  if (userCount < 5) {
-    const testUsers = [
+  const testUsers = [
       {
         email: 'alice@stylo.id',
         name: 'Alice Johnson',
@@ -469,32 +468,24 @@ async function seed() {
       },
     ];
 
-    for (const userData of testUsers) {
-      const existing = await userRepo.findOne({
-        where: { email: userData.email },
-      });
-      if (!existing) {
-        const password_hash = await bcrypt.hash('password123', 10);
-        await userRepo.save(
-          userRepo.create({
-            ...userData,
-            password_hash,
-            style_preferences: userData.prefs,
-          }),
-        );
-      }
-    }
-    console.log('✅ Test users seeded');
+  for (const userData of testUsers) {
+    const password_hash = await bcrypt.hash('password123', 10);
+    await userRepo.save(
+      userRepo.create({
+        ...userData,
+        password_hash,
+        style_preferences: userData.prefs,
+      }),
+    );
   }
+  console.log('✅ Test users seeded');
 
   // Sample Reviews
   const reviewRepo = dataSource.getRepository(Review);
-  const reviewCount = await reviewRepo.count();
-  if (reviewCount === 0) {
-    const products = await productRepo.find();
-    const users = await userRepo.find();
+  const products = await productRepo.find();
+  const users = await userRepo.find();
 
-    const reviewData = [
+  const reviewData = [
       {
         productIndex: 0,
         user: users[0],
@@ -557,33 +548,28 @@ async function seed() {
       },
     ];
 
-    for (const review of reviewData) {
-      const product = products[review.productIndex];
-      const user = review.user;
-      if (product && user) {
-        await reviewRepo.save(
-          reviewRepo.create({
-            product,
-            user_id: user.id,
-            user_name: user.name,
-            user_avatar: user.avatar_url,
-            rating: review.rating,
-            comment: review.comment,
-          }),
-        );
-      }
+  for (const review of reviewData) {
+    const product = products[review.productIndex];
+    const user = review.user;
+    if (product && user) {
+      await reviewRepo.save(
+        reviewRepo.create({
+          product,
+          user_id: user.id,
+          user_name: user.name,
+          user_avatar: user.avatar_url,
+          rating: review.rating,
+          comment: review.comment,
+        }),
+      );
     }
-    console.log('✅ Reviews seeded');
-  } else {
-    console.log('ℹ️ Reviews already seeded');
   }
+  console.log('✅ Reviews seeded');
 
   // Sample Notifications
   const notifRepo = dataSource.getRepository(Notification);
-  const notifCount = await notifRepo.count();
-  if (notifCount === 0 && demoUser) {
-    await notifRepo.save([
-      notifRepo.create({
+  await notifRepo.save([
+    notifRepo.create({
         user: demoUser,
         title: 'Welcome to Stylo!',
         body: 'Thanks for joining! Explore our latest collection and enjoy 10% off your first order.',
@@ -605,8 +591,7 @@ async function seed() {
         is_read: true,
       }),
     ]);
-    console.log('✅ Notifications seeded');
-  }
+  console.log('✅ Notifications seeded');
 
   await dataSource.destroy();
   console.log('🎉 Seeding complete!');

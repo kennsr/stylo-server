@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { User } from '../auth/entities/user.entity';
@@ -9,6 +9,9 @@ import {
   UpdateStylePreferencesDto,
   UpdateFitProfileDto,
 } from './dto/profile.dto';
+import * as crypto from 'crypto';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class ProfileService {
@@ -20,6 +23,62 @@ export class ProfileService {
     @InjectRepository(FitProfile)
     private fitProfilesRepository: Repository<FitProfile>,
   ) {}
+
+  private getUploadsDir(): string {
+    const uploadsDir = path.join(process.cwd(), 'uploads', 'avatars');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    return uploadsDir;
+  }
+
+  private generateFileName(originalName: string): string {
+    const ext = path.extname(originalName);
+    const filename = `${crypto.randomBytes(16).toString('hex')}${ext}`;
+    return filename;
+  }
+
+  async uploadAvatar(user: User, file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    // Validate file type
+    const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedMimes.includes(file.mimetype)) {
+      throw new BadRequestException('Only JPG, PNG, or WEBP files are allowed');
+    }
+
+    // Validate file size (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      throw new BadRequestException('File size must be less than 5MB');
+    }
+
+    // Save file to disk
+    const uploadsDir = this.getUploadsDir();
+    const filename = this.generateFileName(file.originalname);
+    const filePath = path.join(uploadsDir, filename);
+
+    // Write file
+    fs.writeFileSync(filePath, file.buffer);
+
+    // Generate public URL (in production, this would be your CDN/S3 URL)
+    const avatarUrl = `/uploads/avatars/${filename}`;
+
+    // Update user
+    user.avatar_url = avatarUrl;
+    await this.usersRepository.save(user);
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone ?? null,
+      avatar_url: user.avatar_url,
+      style_preferences: (user.style_preferences ?? []).map((p) => p.id),
+    };
+  }
 
   getProfile(user: User) {
     return {
